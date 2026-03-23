@@ -127,15 +127,15 @@ BINANCE_SECRET_KEY=your_binance_testnet_secret
 
 ## Signal to Execution Flow
 
-1. `BinanceWebSocketClient` streams depth updates.
-2. `OrderBookManager` applies updates to local order book.
+1. `main.py` fetches one Binance REST depth snapshot.
+2. `OrderBookManager` applies snapshot levels to local order book.
 3. `SignalEngine` emits `TradingSignal(symbol, side, quantity)`.
-4. `ExecutionManager` routes signal to all configured execution adapters.
+4. `ExecutionManager` routes signal to configured execution adapters.
 5. Risk checks are applied:
    - max position size
    - max trades per minute
    - account balance check
-6. Trades are executed and logged in standardized format:
+6. Trade result is returned as JSON-serializable Lambda output.
 
 ```text
 [EXECUTION] Exchange: Binance Testnet Symbol: BTCUSDT Side: BUY Quantity: 0.010000 Price: 68320.0000
@@ -155,8 +155,7 @@ python main.py
 
 ## Dependencies
 
-- `python-binance`
-- `websockets`
-- `pandas`
-- `numpy`
+- `requests`
+- `certifi`
 - `python-dotenv`
+- `typing_extensions`
